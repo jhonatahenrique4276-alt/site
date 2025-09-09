@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pague com Pix</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      background: black; /* cor de fundo caso a imagem não ocupe toda tela */
+    }
+
+    /* Fundo */
+    #background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("FUNDODOSEUCHOICE.jpg") center center no-repeat;
+      background-size: contain; /* mostra a imagem inteira sem zoom */
+      transition: filter 0.4s ease;
+      z-index: -1;
+    }
+
+    /* Botão principal */
+    #pixButton {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 14px 22px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff4ec7, #b83280);
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2;
+      animation: pulse 1.2s infinite;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    #pixButton:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 78, 199, 0.7);
+    }
+
+    /* Animação de atenção no botão */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Tela de carregamento */
+    #loading {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s;
+      z-index: 5;
+    }
+
+    #loading.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Loader circular */
+    .spinner {
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid #ff4ec7;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Modal da imagem Pix */
+    #pixModal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      z-index: 3;
+      animation: fadeIn 0.6s ease; /* animação fade-in */
+    }
+
+    #pixModal img {
+      max-width: 70vw;
+      max-height: 70vh;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    #pixModal button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff4ec7, #b83280);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    #pixModal button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 78, 199, 0.7);
+    }
+
+    /* Animação fade-in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div id="background"></div>
+
+  <!-- Botão Pix -->
+  <button id="pixButton" onclick="openWithLoading()">Pague com Pix</button>
+
+  <!-- Tela de carregamento -->
+  <div id="loading"><div class="spinner"></div></div>
+
+  <!-- Modal Pix -->
+  <div id="pixModal">
+    <img src="PAGAMENTO.jpg" alt="Pagamento Pix">
+    <button onclick="closeWithLoading()">Voltar</button>
+  </div>
+
+  <script>
+    const background = document.getElementById("background");
+    const loading = document.getElementById("loading");
+    const pixModal = document.getElementById("pixModal");
+    const pixButton = document.getElementById("pixButton");
+
+    function showLoading(callback) {
+      loading.classList.add("show");
+      setTimeout(() => {
+        loading.classList.remove("show");
+        callback();
+      }, 800); // menos de 1 segundo
+    }
+
+    function openWithLoading() {
+      showLoading(() => {
+        background.style.filter = "blur(6px)";
+        pixModal.style.display = "flex";
+        pixButton.style.display = "none";
+      });
+    }
+
+    function closeWithLoading() {
+      showLoading(() => {
+        background.style.filter = "none";
+        pixModal.style.display = "none";
+        pixButton.style.display = "block";
+      });
+    }
+  </script>
+</body>
+</html>
